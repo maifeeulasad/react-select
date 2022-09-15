@@ -1,5 +1,15 @@
-.sassExample{
+.dropdown{
   color: green;
   border: 1px solid red;
   text-align: center;
+}
+
+.items{
+
+}
+
+.dropdown:checked ~ .items{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
