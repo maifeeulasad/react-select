@@ -21,8 +21,10 @@ const Select = () => {
   const [opened, setOpened] = useState<boolean>(false);
   const [options, setOptions] = useState(ITEMS);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [searchKeyword, setSearchKeyword] = useState('');
 
   const toggleOpened = () => setOpened(!opened);
+  const resetSearch = () => setSearchKeyword('');
 
   const selectItem = (key: string) => setSelectedKeys([...selectedKeys, key]);
   const removeSelectedItem = (key: string) => setSelectedKeys(selectedKeys.filter((selectedKey) => selectedKey !== key));
@@ -42,12 +44,13 @@ const Select = () => {
               </div>
             ))
       }
-      <div onClick={() => { toggleOpened(); }} role="presentation">Menu</div>
+      <div onClick={() => { toggleOpened(); resetSearch(); }} role="presentation">Menu</div>
+      {opened && <input type="text" onChange={(e) => { setSearchKeyword(e.target.value); }} />}
       {opened &&
         <div className={styles.items}>
             {
                 options
-                  .filter((option) => !selectedKeys.includes(option.key))
+                  .filter((option) => option.value.includes(searchKeyword) && !selectedKeys.includes(option.key))
                   .map((option) => (
                     <div
                       role="presentation"
@@ -55,8 +58,7 @@ const Select = () => {
                     >
                       {option.value}
                     </div>
-                  ),
-                  )
+                  ))
             }
         </div>
         }
