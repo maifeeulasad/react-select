@@ -1,6 +1,8 @@
 import React from 'react';
 import { Select } from '../../component/select/Select';
 
+import styles from './Landing.module.scss';
+
 const OPTIONS = [
   {
     key: 'a',
@@ -73,16 +75,8 @@ const OPTIONS = [
 ];
 
 const Landing = () => (
-  <div>
-
-    <header>
-      <div className="text-red-600">
-        React Select
-      </div>
-      <div>
-        <Select options={OPTIONS} />
-      </div>
-    </header>
+  <div className={styles.wrap}>
+    <Select options={OPTIONS} />
   </div>
 );
 

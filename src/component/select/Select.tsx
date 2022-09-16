@@ -45,6 +45,28 @@ const InputText = ({ dropdownText, searchKeyword, setSearchKeyword }: IInputText
   />
 );
 
+interface IItemsAvailableProps {
+  availableItems: IItem[]
+  onItemSelect: (key: string) => void;
+}
+
+const ItemsAvailable = ({ availableItems, onItemSelect }: IItemsAvailableProps) => (
+  <div className={styles.items}>
+    {
+    availableItems
+      .map((option) => (
+        <div
+          className={styles.item}
+          role="presentation"
+          onClick={() => { onItemSelect(option.key); }}
+        >
+          {option.value}
+        </div>
+      ))
+}
+  </div>
+);
+
 interface ISelectProps {
   options: IItem[];
   dropdownText?: string;
@@ -63,39 +85,32 @@ const Select = ({ options, dropdownText }: ISelectProps) => {
   const removeSelectedItem = (key: string) => setSelectedKeys(selectedKeys.filter((selectedKey) => selectedKey !== key));
   const removeAll = () => setSelectedKeys([]);
 
+  const onItemSelect = (key: string) => {
+    selectItem(key); resetSearch(); close();
+  };
+
   return (
     <div>
 
-      <div onClick={() => { toggleOpened(); resetSearch(); }} role="presentation">
+      <div className={styles.selectionSection} onClick={() => { toggleOpened(); resetSearch(); }} role="presentation">
         <div className={styles.selectedItemsWrap}>
           <SelectedItems
             selectedItems={options.filter((option) => selectedKeys.includes(option.key))}
             removeSelectedItem={removeSelectedItem}
           />
           <InputText searchKeyword={searchKeyword} dropdownText={dropdownText} setSearchKeyword={setSearchKeyword} />
-          { /* eslint-disable-next-line jsx-a11y/control-has-associated-label */ }
-          {selectedKeys.length !== 0 && <button className={styles.close} type="button" onClick={() => { removeAll(); }} />}
-          <div className={styles.down} />
         </div>
+        { /* eslint-disable-next-line jsx-a11y/control-has-associated-label */ }
+        {selectedKeys.length !== 0 && <button className={styles.close} type="button" onClick={() => { removeAll(); }} />}
+        <div className={styles.down} />
       </div>
 
-      {opened &&
-        <div className={styles.items}>
-            {
-                options
-                  .filter((option) => option.value.includes(searchKeyword) && !selectedKeys.includes(option.key))
-                  .map((option) => (
-                    <div
-                      className={styles.item}
-                      role="presentation"
-                      onClick={() => { selectItem(option.key); resetSearch(); close(); }}
-                    >
-                      {option.value}
-                    </div>
-                  ))
-            }
-        </div>
-        }
+      {opened && <ItemsAvailable
+        availableItems={options
+          .filter((option) => option.value.includes(searchKeyword) && !selectedKeys.includes(option.key))}
+        onItemSelect={onItemSelect}
+      />
+      }
     </div>
   );
 };
