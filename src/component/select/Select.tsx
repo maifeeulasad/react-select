@@ -2,50 +2,83 @@ import React, { useState } from 'react';
 
 import styles from './Select.module.scss';
 
-const ITEMS = [
-  {
-    key: 'a',
-    value: 'a',
-  },
-  {
-    key: 'b',
-    value: 'b',
-  },
-  {
-    key: 'c',
-    value: 'd',
-  },
-];
+interface IItem {
+  key: string;
+  value: string;
+}
 
-const Select = () => {
+interface ISelectedItemsProps {
+  selectedItems: IItem[]
+  removeSelectedItem: (key: string) => void;
+}
+
+const SelectedItems = ({ selectedItems, removeSelectedItem }:ISelectedItemsProps) => (
+  <>
+    {
+      selectedItems.map((option) => (
+        <div
+          className={styles.selectedItemWrap}
+          role="presentation"
+        >
+          <div className={styles.selectedItemtext} title={option.value}>{option.value}</div>
+          { /* eslint-disable-next-line jsx-a11y/control-has-associated-label */ }
+          <button className={styles.close} type="button" onClick={() => { removeSelectedItem(option.key); }} />
+        </div>
+      ))
+    }
+  </>
+);
+
+interface IInputTextProps {
+  dropdownText?: string;
+  searchKeyword: string;
+  setSearchKeyword: (keyword: string) => void;
+}
+
+const InputText = ({ dropdownText, searchKeyword, setSearchKeyword }: IInputTextProps) => (
+  <input
+    value={searchKeyword}
+    placeholder={dropdownText || 'Please select...'}
+    className={styles.inputText}
+    type="text"
+    onChange={(e) => { setSearchKeyword(e.target.value); }}
+  />
+);
+
+interface ISelectProps {
+  options: IItem[];
+  dropdownText?: string;
+}
+
+const Select = ({ options, dropdownText }: ISelectProps) => {
   const [opened, setOpened] = useState<boolean>(false);
-  const [options, setOptions] = useState(ITEMS);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [searchKeyword, setSearchKeyword] = useState('');
 
   const toggleOpened = () => setOpened(!opened);
+  const close = () => setOpened(false);
   const resetSearch = () => setSearchKeyword('');
 
   const selectItem = (key: string) => setSelectedKeys([...selectedKeys, key]);
   const removeSelectedItem = (key: string) => setSelectedKeys(selectedKeys.filter((selectedKey) => selectedKey !== key));
+  const removeAll = () => setSelectedKeys([]);
 
   return (
     <div>
-      <div>Selected Items</div>
-      {
-          options
-            .filter((option) => selectedKeys.includes(option.key))
-            .map((option) => (
-              <div
-                role="presentation"
-                onClick={() => { removeSelectedItem(option.key); }}
-              >
-                {option.value}
-              </div>
-            ))
-      }
-      <div onClick={() => { toggleOpened(); resetSearch(); }} role="presentation">Menu</div>
-      {opened && <input type="text" onChange={(e) => { setSearchKeyword(e.target.value); }} />}
+
+      <div onClick={() => { toggleOpened(); resetSearch(); }} role="presentation">
+        <div className={styles.selectedItemsWrap}>
+          <SelectedItems
+            selectedItems={options.filter((option) => selectedKeys.includes(option.key))}
+            removeSelectedItem={removeSelectedItem}
+          />
+          <InputText searchKeyword={searchKeyword} dropdownText={dropdownText} setSearchKeyword={setSearchKeyword} />
+          { /* eslint-disable-next-line jsx-a11y/control-has-associated-label */ }
+          {selectedKeys.length !== 0 && <button className={styles.close} type="button" onClick={() => { removeAll(); }} />}
+          <div className={styles.down} />
+        </div>
+      </div>
+
       {opened &&
         <div className={styles.items}>
             {
@@ -53,8 +86,9 @@ const Select = () => {
                   .filter((option) => option.value.includes(searchKeyword) && !selectedKeys.includes(option.key))
                   .map((option) => (
                     <div
+                      className={styles.item}
                       role="presentation"
-                      onClick={() => { selectItem(option.key); }}
+                      onClick={() => { selectItem(option.key); resetSearch(); close(); }}
                     >
                       {option.value}
                     </div>
