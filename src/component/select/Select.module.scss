@@ -1,3 +1,9 @@
+button{
+  border: none;
+  background: none;
+  outline: none;
+}
+
 .items{
   max-height: 200px;
   overflow-y: scroll;
@@ -15,11 +21,15 @@
 .close::before{
   content: 'x';
   padding: 4px;
+  border: none;
+  background: none;
+  outline: none;
 }
 
 .selectedItemsWrap{
   margin: 4px;
-  display: flex;
+  display: flex;  
+  flex-wrap: wrap;
 }
 
 .selectedItemWrap {
@@ -38,12 +48,11 @@
   overflow: hidden;
 }
 
-.selectedItemtext:hover{
-
-}
-
 .inputText{
-  width: 100%;
+  min-width: 40px;
+  outline: none;
+  border: 0;
+  flex-grow: 1;
 }
 
 .inputText:focus{
