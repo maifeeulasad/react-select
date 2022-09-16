@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 import styles from './Select.module.scss';
 
@@ -77,6 +77,12 @@ const Select = ({ options, dropdownText }: ISelectProps) => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [searchKeyword, setSearchKeyword] = useState('');
 
+  const selectedItems = useMemo(() => options.filter((option) => selectedKeys.includes(option.key)), [options, selectedKeys]);
+  const itemsToRender = useMemo(() => options
+    .filter((option) => option.value.includes(searchKeyword) && !selectedKeys.includes(option.key)), [options, selectedKeys, searchKeyword]);
+  const atLeastOneSelected = useMemo(() => selectedItems.length !== 0, [selectedItems]);
+  const allSelected = useMemo(() => selectedItems.length !== options.length, [selectedItems, options]);
+
   const toggleOpened = () => setOpened(!opened);
   const close = () => setOpened(false);
   const resetSearch = () => setSearchKeyword('');
@@ -91,23 +97,21 @@ const Select = ({ options, dropdownText }: ISelectProps) => {
 
   return (
     <div>
-
       <div className={styles.selectionSection} onClick={() => { toggleOpened(); resetSearch(); }} role="presentation">
         <div className={styles.selectedItemsWrap}>
           <SelectedItems
-            selectedItems={options.filter((option) => selectedKeys.includes(option.key))}
+            selectedItems={selectedItems}
             removeSelectedItem={removeSelectedItem}
           />
-          <InputText searchKeyword={searchKeyword} dropdownText={dropdownText} setSearchKeyword={setSearchKeyword} />
+          {allSelected && <InputText searchKeyword={searchKeyword} dropdownText={dropdownText} setSearchKeyword={setSearchKeyword} />}
         </div>
         { /* eslint-disable-next-line jsx-a11y/control-has-associated-label */ }
-        {selectedKeys.length !== 0 && <button className={styles.close} type="button" onClick={() => { removeAll(); }} />}
-        <div className={styles.down} />
+        {atLeastOneSelected && <button className={styles.close} type="button" onClick={() => { removeAll(); }} />}
+        {allSelected && <div className={styles.down} />}
       </div>
 
       {opened && <ItemsAvailable
-        availableItems={options
-          .filter((option) => option.value.includes(searchKeyword) && !selectedKeys.includes(option.key))}
+        availableItems={itemsToRender}
         onItemSelect={onItemSelect}
       />
       }

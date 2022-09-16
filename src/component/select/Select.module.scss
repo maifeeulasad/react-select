@@ -71,3 +71,7 @@ button{
   display: flex;
   align-items: center
 }
+
+.disabled{
+  pointer-events: none;
+}
