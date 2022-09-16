@@ -1,0 +1,58 @@
+.items{
+  max-height: 200px;
+  overflow-y: scroll;
+}
+
+.item{
+  margin: 2px;
+  box-shadow: 10px;
+}
+
+.item:hover{
+  background-color: rgb(198, 248, 229);
+}
+
+.close::before{
+  content: 'x';
+  padding: 4px;
+}
+
+.selectedItemsWrap{
+  margin: 4px;
+  display: flex;
+}
+
+.selectedItemWrap {
+  min-width: 60px;
+  background-color: rgb(204, 225, 242);
+  border-radius: 4px;
+  display: flex;
+  margin: 2px;
+  min-width: 0px;
+  box-sizing: border-box;
+}
+
+.selectedItemtext{
+  padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.selectedItemtext:hover{
+
+}
+
+.inputText{
+  width: 100%;
+}
+
+.inputText:focus{
+  outline: none;
+}
+
+.down::before{
+  height: 100%;
+  content: "\25bc"; 
+  color: black;
+  padding: 4px;
+}

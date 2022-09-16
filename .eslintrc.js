@@ -52,6 +52,7 @@ module.exports = {
     ],
     'operator-linebreak': [1, 'after'],
     'linebreak-style': 'off',
+    'max-len': 'off',
     // Import related
     'import/prefer-default-export': 'off',
     'import/no-default-export': 'error',
