@@ -57,7 +57,7 @@ const ItemsAvailable = ({ availableItems, onItemSelect }: IItemsAvailableProps) 
     availableItems
       .map((option) => (
         <div
-          className={`styles.item ${option.disabled ? styles.disabled : ''}`}
+          className={`${styles.item} ${option.disabled ? styles.disabled : ''}`}
           role="presentation"
           onClick={() => { onItemSelect(option.key); }}
         >
