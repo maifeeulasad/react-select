@@ -5,6 +5,7 @@ import styles from './Select.module.scss';
 interface IItem {
   key: string;
   value: string;
+  disabled?: boolean;
 }
 
 interface ISelectedItemsProps {
@@ -56,7 +57,7 @@ const ItemsAvailable = ({ availableItems, onItemSelect }: IItemsAvailableProps) 
     availableItems
       .map((option) => (
         <div
-          className={styles.item}
+          className={`styles.item ${option.disabled ? styles.disabled : ''}`}
           role="presentation"
           onClick={() => { onItemSelect(option.key); }}
         >

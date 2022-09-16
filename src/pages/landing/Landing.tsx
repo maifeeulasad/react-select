@@ -11,6 +11,7 @@ const OPTIONS = [
   {
     key: 'b',
     value: 'long long b',
+    disabled: true,
   },
   {
     key: 'c',
@@ -71,6 +72,7 @@ const OPTIONS = [
   {
     key: 'q',
     value: '87687k',
+    disabled: true,
   },
 ];
 
